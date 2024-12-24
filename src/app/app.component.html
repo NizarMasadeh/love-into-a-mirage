@@ -1,6 +1,6 @@
 
 
-<div class="container" [ngClass]="isLoading ? '' : 'fadeIn'">
+<div class="container" [hidden]="isLoading" [ngClass]="isLoading ? '' : 'fadeIn'">
   <div class="player-card">
     <div class="image-container">
       <img src="./assets/image.png" [hidden]="isLoading" (load)="imgLoaded()" alt="Album Cover">
