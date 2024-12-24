@@ -1,13 +1,31 @@
-<div class="container flex justify-content-center align-items-center">
-  <div class="body h-30rem flex flex-column justify-content-center gap-3 align-items-center">
-    <div class="image-container h-30rem w-20rem">
-      <img src="./assets/image.png" height="100%" width="100%" alt="">
+<div class="container">
+  <div class="player-card" [ngClass]="imageLoaded ? 'fadeIn' : 'opacity-0'">
+    <div class="image-container">
+      <img src="./assets/image.png" (load)="loadImage()" alt="Album Cover">
     </div>
-    Love into a mirage - podcast review
-    <div class="audio">
-      <audio controls>
-        <source src="./assets/love-into-a-mirage.wav" type="audio/wav">
+    <h2 class="title">Love into a mirage - podcast review</h2>
+    <div class="audio-controls">
+      <audio #audioPlayer>
+        <source [src]="audioSrc" type="audio/wav">
+        Your browser does not support the audio element.
       </audio>
+      <div class="button-group">
+        <button class="control-btn play-pause-btn" (click)="togglePlay()" aria-label="Play or pause">
+          <i class="fas" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'" aria-hidden="true"></i>
+        </button>
+        <button class="control-btn download-btn" (click)="downloadAudio()" aria-label="Download audio">
+          <i class="fas fa-download" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="progress-container">
+        <input #progressBar type="range" class="progress-bar" [min]="0" [max]="duration" [value]="currentTime" (input)="updateProgressHandle()" aria-label="Seek audio position">
+        <div #progressHandle class="progress-handle"></div>
+        <div class="time-display">
+          <span>{{ formatTime(currentTime) }}</span>
+          <span>{{ formatTime(duration) }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+

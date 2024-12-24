@@ -1,21 +1,162 @@
 @import "primeflex/primeflex.css";
 
 :root {
-    --primary-color: rgb(2, 2, 2);
-    --secondary-color: rgb(34, 34, 34);
-    --primary-color-text: rgb(235, 235, 235);
+  --primary-color: rgb(2, 2, 2);
+  --secondary-color: rgb(34, 34, 34);
+  --accent-color: rgb(61, 90, 254);
+  --primary-color-text: rgb(235, 235, 235);
 }
 
 @font-face {
-    font-family: NZRM;
-    src: url("./assets/Parkinsans-VariableFont_wght.ttf");
+  font-family: NZRM;
+  src: url("./assets/Parkinsans-VariableFont_wght.ttf");
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: var(--primary-color);
-    color: var(--primary-color-text);
-    font-family: NZRM;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--primary-color);
+  color: var(--primary-color-text);
+  font-family: NZRM, sans-serif;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 93vh;
+  padding: 2rem;
+}
+
+.player-card {
+  background-color: var(--secondary-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+}
+
+.image-container {
+  width: 100%;
+  height: 400px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border-radius: 0.5rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.audio-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.control-btn {
+  background-color: var(--accent-color);
+  color: var(--primary-color-text);
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: var(--accent-color), 10%;
+  }
+}
+
+.progress-container {
+  width: 100%;
+  position: relative;
+}
+
+.progress-bar {
+  width: 100%;
+  -webkit-appearance: none;
+  background: var(--primary-color);
+  outline: none;
+  border-radius: 15px;
+  overflow: hidden;
+  height: 8px;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: -100vw 0 0 100vw var(--accent-color);
+  }
+
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  &::-moz-range-progress {
+    background-color: var(--accent-color);
+    height: 8px;
+  }
+}
+
+.progress-handle {
+    width: 16px;
+    height: 16px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    position: absolute;
+    top: 25%;
+    transform: translate(25%, -50%);
+    pointer-events: none;
+    transition: left 0.1s ease;
+}
+
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--primary-color-text);
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    animation: .4s ease-in-out;
 }
