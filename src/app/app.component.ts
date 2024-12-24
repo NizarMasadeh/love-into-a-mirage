@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { inject } from '@vercel/analytics';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy{
 
   constructor(private ngZone: NgZone) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    inject();
+  }
 
   ngAfterViewInit() {
     const audioElement = this.audioPlayerRef.nativeElement;
