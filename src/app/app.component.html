@@ -1,34 +1,37 @@
-<div class="container">
+
+
+<div class="container" [ngClass]="isLoading ? '' : 'fadeIn'">
   <div class="player-card">
     <div class="image-container">
-      <img src="./assets/image.png" alt="Album Cover">
+      <img src="./assets/image.png" [hidden]="isLoading" (load)="imgLoaded()" alt="Album Cover">
     </div>
-    <h2 class="title">Love into a mirage - podcast review</h2>
+    <h2 class="title">Love Into A Mirage - <br>Podcast review</h2>
     <div class="audio-controls">
       <audio #audioPlayer>
         <source [src]="audioSrc" type="audio/wav">
         Your browser does not support the audio element.
       </audio>
-      <div class="button-group">
-        <button class="control-btn play-pause-btn" (click)="togglePlay()" aria-label="Play or pause">
-          <i class="fas" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'" aria-hidden="true"></i>
-        </button>
-        <button class="control-btn download-btn" (click)="downloadAudio()" aria-label="Download audio">
-          <i class="fas fa-download" aria-hidden="true"></i>
-        </button>
+      <div class="flex justify-content-between align-content-center w-full">
+        <div class="social ml-2" (click)="onGithub()">
+          <i class="fa-brands fa-github"></i>
+        </div>
+        <div class="button-group">
+          <button class="control-btn play-pause-btn" (click)="togglePlay()" aria-label="Play or pause">
+            <i class="fas" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'" aria-hidden="true"></i>
+          </button>
+          <button class="control-btn download-btn" (click)="downloadAudio()" aria-label="Download audio">
+            <i class="fas fa-download" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="social mr-2" (click)="onInstagram()">
+          <i class="fa-brands fa-instagram"></i>
+        </div>
       </div>
       <div class="progress-container">
-        <input #progressBar 
-               type="range" 
-               class="progress-bar" 
-               [min]="0" 
-               [max]="duration" 
-               [value]="currentTime" 
-               (mousedown)="startDragging($event)"
-               (touchstart)="startDragging($event)"
-               (mousemove)="isDragging && seek($event)"
-               (touchmove)="isDragging && seek($event)"
-               aria-label="Seek audio position">
+        <input #progressBar type="range" class="progress-bar" [min]="0" [max]="duration" [value]="currentTime"
+          (mousedown)="startDragging($event)" (touchstart)="startDragging($event)"
+          (mousemove)="isDragging && seek($event)" (touchmove)="isDragging && seek($event)"
+          aria-label="Seek audio position">
         <div #progressHandle class="progress-handle"></div>
         <div class="time-display">
           <span>{{ formatTime(currentTime) }}</span>
@@ -38,4 +41,3 @@
     </div>
   </div>
 </div>
-

@@ -5,7 +5,7 @@ import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewCh
   selector: 'app-root',
   imports: [
     CommonModule,
-  ],
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -19,6 +19,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy{
   duration: number = 0;
   isDragging: boolean = false;
   audioSrc: string = './assets/love-into-a-mirage.wav';
+  isLoading = true;
 
   private documentClickListener: (() => void) | null = null;
   private documentTouchEndListener: (() => void) | null = null;
@@ -121,5 +122,17 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy{
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  imgLoaded() {
+    this.isLoading = false;
+  }
+
+  onInstagram() {
+    window.open('https://www.instagram.com/nizar_masadeh', '_blank');
+  }
+
+  onGithub() {
+    window.open('https://github.com/NizarMasadeh', '_blank');
   }
 }
