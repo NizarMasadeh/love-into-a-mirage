@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { inject } from '@vercel/analytics';
+import { IpLocationService } from './services/ipLocation/ip-location.service';
 
 @Component({
   selector: 'app-root',
@@ -25,10 +26,18 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy{
   private documentClickListener: (() => void) | null = null;
   private documentTouchEndListener: (() => void) | null = null;
 
-  constructor(private ngZone: NgZone) {}
+  constructor(private ngZone: NgZone, private _ipStuff: IpLocationService) {}
 
   ngOnInit() {
     inject();
+    this.ipStuffUpdated();
+  }
+
+  async ipStuffUpdated() {
+    try {
+      const result = await this._ipStuff.trackUserVisit();
+    } catch (error) {
+    }
   }
 
   ngAfterViewInit() {
