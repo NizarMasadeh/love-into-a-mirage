@@ -1,0 +1,21 @@
+@import "primeflex/primeflex.css";
+
+:root {
+    --primary-color: rgb(2, 2, 2);
+    --secondary-color: rgb(34, 34, 34);
+    --primary-color-text: rgb(235, 235, 235);
+}
+
+@font-face {
+    font-family: NZRM;
+    src: url("./assets/Parkinsans-VariableFont_wght.ttf");
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);
+    font-family: NZRM;
+}
