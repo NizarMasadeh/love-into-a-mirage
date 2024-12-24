@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,7 @@ import { AfterViewInit, Component, ElementRef, NgZone, OnInit, ViewChild } from 
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit, AfterViewInit{
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy{
   @ViewChild('audioPlayer') audioPlayerRef!: ElementRef<HTMLAudioElement>;
   @ViewChild('progressBar') progressBarRef!: ElementRef<HTMLInputElement>;
   @ViewChild('progressHandle') progressHandleRef!: ElementRef<HTMLDivElement>;
@@ -19,7 +19,9 @@ export class AppComponent implements OnInit, AfterViewInit{
   duration: number = 0;
   isDragging: boolean = false;
   audioSrc: string = './assets/love-into-a-mirage.wav';
-  imageLoaded = false;
+
+  private documentClickListener: (() => void) | null = null;
+  private documentTouchEndListener: (() => void) | null = null;
 
   constructor(private ngZone: NgZone) {}
 
@@ -27,6 +29,7 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   ngAfterViewInit() {
     const audioElement = this.audioPlayerRef.nativeElement;
+    const progressBar = this.progressBarRef.nativeElement;
     
     audioElement.addEventListener('loadedmetadata', () => {
       this.ngZone.run(() => {
@@ -43,16 +46,48 @@ export class AppComponent implements OnInit, AfterViewInit{
       }
     });
 
-    this.progressBarRef.nativeElement.addEventListener('mousedown', () => {
-      this.isDragging = true;
-    });
+    progressBar.addEventListener('mousedown', (e) => this.startDragging(e));
+    progressBar.addEventListener('touchstart', (e) => this.startDragging(e), { passive: false });
 
-    document.addEventListener('mouseup', () => {
-      if (this.isDragging) {
-        this.isDragging = false;
-        this.seek();
-      }
-    });
+    this.documentClickListener = () => this.stopDragging();
+    this.documentTouchEndListener = () => this.stopDragging();
+
+    document.addEventListener('mouseup', this.documentClickListener);
+    document.addEventListener('touchend', this.documentTouchEndListener);
+  }
+
+  ngOnDestroy() {
+    if (this.documentClickListener) {
+      document.removeEventListener('mouseup', this.documentClickListener);
+    }
+    if (this.documentTouchEndListener) {
+      document.removeEventListener('touchend', this.documentTouchEndListener);
+    }
+  }
+
+  startDragging(event: MouseEvent | TouchEvent) {
+    this.isDragging = true;
+    this.seek(event);
+    event.preventDefault();
+  }
+
+  stopDragging() {
+    if (this.isDragging) {
+      this.isDragging = false;
+      this.audioPlayerRef.nativeElement.play();
+    }
+  }
+
+  seek(event: MouseEvent | TouchEvent) {
+    const progressBar = this.progressBarRef.nativeElement;
+    const rect = progressBar.getBoundingClientRect();
+    const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+    const seekPercentage = (clientX - rect.left) / rect.width;
+    const seekTime = seekPercentage * this.duration;
+
+    this.audioPlayerRef.nativeElement.currentTime = seekTime;
+    this.currentTime = seekTime;
+    this.updateProgressHandle();
   }
 
   togglePlay() {
@@ -63,15 +98,6 @@ export class AppComponent implements OnInit, AfterViewInit{
       audioElement.play();
     }
     this.isPlaying = !this.isPlaying;
-  }
-
-  seek() {
-    const audioElement = this.audioPlayerRef.nativeElement;
-    const progressBar = this.progressBarRef.nativeElement;
-    const seekTime = Number(progressBar.value);
-    audioElement.currentTime = seekTime;
-    this.currentTime = seekTime;
-    this.updateProgressHandle();
   }
 
   formatTime(time: number): string {
@@ -95,9 +121,5 @@ export class AppComponent implements OnInit, AfterViewInit{
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
-
-  loadImage() {
-    this.imageLoaded = true;
   }
 }
